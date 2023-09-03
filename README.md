@@ -2,9 +2,15 @@
 
 This repository contains a set of custom URL schemes accepted by <https://lnav.org/> enabling convenient access to Kubernetes (`kubectl`) and OpenShift (`oc`) log data.
 
-**Status: ALPHA + EXPERIMENTAL**
+Through the general functionality of `lnav`, this enables merging multiple `kubectl logs` or `oc logs` outputs, aggregating across
+a variety of selector- and resource-based log sources.
 
-Use at your own risk, feedback welcome.
+> [!NOTE]
+> The content of this repository builds on top
+> of unreleased `lnav` features and is itself
+> still subject to experimentation and stabiliziation.
+>
+> _Caveat emptor_.
 
 ## System requirements
 
@@ -38,7 +44,7 @@ respective container platform's CLI tools, see
 ### Resource-based queries
 
 Resource-based queries address a specific resource, i.e. either a `Pod` directly
-or a CRD type that emits logs, e.g. `Deployment` or `StatefulSet`
+or a CRD type that emits logs, e.g. `Deployment` or `StatefulSet`.
 
 Connect to one specific `Pod` with all its containers:
 
@@ -84,7 +90,7 @@ quoted properly, e.g.
 lnav 'kubectl://selector/app=mine?param1=hello&param2=world'
 ```
 
-#### --max-log-requests support
+#### max-log-requests
 
 Use the `max-log-requests` query parameter to extend
 the maximum number of logs that can be opened at the
@@ -94,7 +100,7 @@ same time:
 lnav 'kubectl://selector/key=value?max-log-requests=20'
 ```
 
-#### --namespace support
+#### namespace (or n)
 
 By adding the `namespace` query parameter, the default namespace
 can be overriden:
@@ -111,3 +117,26 @@ lnav \
   'kubectl://selector/key=value?namespace=namespace-one' \
   'kubectl://selector/key=value?namespace=namespace-two'
 ```
+
+Query parameter `n` is shorthand for `namespace`, i.e. the
+following commands are equivalent:
+
+```shell
+lnav 'kubectl://selector/key=value?n=kube-system'
+
+lnav 'kubectl://selector/key=value?namespace=kube-system'
+```
+
+#### all-containers
+
+By default, the logs of all containers of a (resource-based) query are
+included. Passing a boolean value (`false` or `true`) for parameter
+`all-containers` provides control over
+the default:
+
+```shell
+lnav kubectl://resource/deployment/my-deployment?all-containers=false
+```
+
+This parameter directly maps to the corresponding option in `kubectl`
+and `oc`.

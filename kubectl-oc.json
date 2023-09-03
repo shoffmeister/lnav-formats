@@ -5,17 +5,8 @@
             "kubectl": {
                 "handler": "kubectl-url-handler"
             },
-            "kubectl-select": {
-                "handler": "kubectl-select-url-handler"
-            },
             "oc": {
                 "handler": "kubectl-url-handler"
-            },
-            "oc-select": {
-                "handler": "kubectl-select-url-handler"
-            },
-            "kubectl-fancy": {
-                "handler": "kubectl-fancy-url-handler"
             }
         }
     }
