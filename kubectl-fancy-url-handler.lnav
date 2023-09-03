@@ -1,0 +1,24 @@
+#
+# @synopsis: kubectl-select-url-handler
+# @description: Internal script to handle opening kubectl-select/oc-select URLs
+#
+
+;SELECT jget(url, '/scheme') AS kubectl_scheme,
+        jget(url, '/user') AS kubectl_user,
+        jget(url, '/password') AS kubectl_password,
+        jget(url, '/host') AS kubectl_hostname,
+        jget(url, '/path') AS kubectl_path
+   FROM (SELECT parse_url($1) AS url)
+
+#
+# kubectl://select:42@app.kubernetes.io/managed-by=Helm
+# kubectl://pod-with-many-containers
+# kubectl://:42@pod-with-many-containers
+# kubectl://:42@pod-with-many-containers
+#
+
+;SELECT $kubectl_hostname || $kubectl_path AS payload
+
+;SELECT printf(':sh %s logs --follow --all-containers=true --max-log-requests=42 "--selector=%s"', $scheme_stripped_of_select, $payload) AS cmds
+
+:eval ${cmds}

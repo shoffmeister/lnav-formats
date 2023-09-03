@@ -13,6 +13,9 @@
             },
             "oc-select": {
                 "handler": "kubectl-select-url-handler"
+            },
+            "kubectl-fancy": {
+                "handler": "kubectl-fancy-url-handler"
             }
         }
     }
