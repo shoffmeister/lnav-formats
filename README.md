@@ -54,7 +54,7 @@ lnav oc://deployment/my-deployment
 ```
 
 Instead of using a `Deployment` any type of CRD supporting
-logs can be used, for instance a StatefulSet.
+logs can be used, for instance a `StatefulSet`.
 
 ### Selector-based queries
 
