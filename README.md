@@ -2,6 +2,10 @@
 
 This repository contains a set of custom URL schemes accepted by <https://lnav.org/> enabling convenient access to Kubernetes (`kubectl`) and OpenShift (`oc`) log data.
 
+**Status: ALPHA + EXPERIMENTAL**
+
+Use at your own risk, feedback welcome.
+
 ## System requirements
 
 * an installation of `lnav` which supports custom URL schemes. lnav 0.11.2 does not contain this functionality, it was only present in CI builds at the time of this writing
