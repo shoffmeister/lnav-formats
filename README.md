@@ -41,7 +41,9 @@ Connect to one specific `Pod` with all its containers:
 
 ```shell
 lnav kubectl://my-pod
+```
 
+```shell
 lnav oc://my-pod
 ```
 
@@ -49,7 +51,9 @@ Connect to a specific `Deployment`:
 
 ```shell
 lnav kubectl://deployment/my-deployment
+```
 
+```shell
 lnav oc://deployment/my-deployment
 ```
 
@@ -65,6 +69,8 @@ value for `--max-log-requests` - buyer beware.
 
 ```shell
 lnav kubectl-select://app.kubernetes.io/managed-by=Helm
+```
 
+```shell
 lnav oc-select://app.kubernetes.io/managed-by=Helm
 ```
