@@ -37,40 +37,77 @@ respective container platform's CLI tools, see
 
 ### Resource-based queries
 
+Resource-based queries address a specific resource, i.e. either a `Pod` directly
+or a CRD type that emits logs, e.g. `Deployment` or `StatefulSet`
+
 Connect to one specific `Pod` with all its containers:
 
 ```shell
-lnav kubectl://my-pod
+lnav kubectl://resource/my-pod
 ```
 
 ```shell
-lnav oc://my-pod
+lnav oc://resource/my-pod
 ```
 
 Connect to a specific `Deployment`:
 
 ```shell
-lnav kubectl://deployment/my-deployment
+lnav kubectl://resource/deployment/my-deployment
 ```
 
 ```shell
-lnav oc://deployment/my-deployment
+lnav oc://resource/deployment/my-deployment
 ```
-
-Instead of using a `Deployment` any type of CRD supporting
-logs can be used, for instance a `StatefulSet`.
 
 ### Selector-based queries
 
-Run a selector query and connect to all pods (and containers)
-found. As such a query may return a large number of log sources,
-the implementation proactively configures a significantly increased
-value for `--max-log-requests` - buyer beware.
+Run a selector query and connect to the logs of all pods (and containers)
+found.
 
 ```shell
-lnav kubectl-select://app.kubernetes.io/managed-by=Helm
+lnav kubectl://selector/app.kubernetes.io/managed-by=Helm
 ```
 
 ```shell
-lnav oc-select://app.kubernetes.io/managed-by=Helm
+lnav oc://selector/app.kubernetes.io/managed-by=Helm
+```
+
+### Tuning through parameters
+
+URL query parameters can be used to tune query. Beware
+of using the ampersand (&) character when using more than
+one query parameter - shells may interpret this, if not
+quoted properly, e.g.
+
+```shell
+lnav 'kubectl://selector/app=mine?param1=hello&param2=world'
+```
+
+#### --max-log-requests support
+
+Use the `max-log-requests` query parameter to extend
+the maximum number of logs that can be opened at the
+same time:
+
+```shell
+lnav 'kubectl://selector/key=value?max-log-requests=20'
+```
+
+#### --namespace support
+
+By adding the `namespace` query parameter, the default namespace
+can be overriden:
+
+```shell
+lnav 'kubectl://selector/key=value?namespace=kube-system'
+```
+
+This is particularly useful for cross-namespace log analysis,
+e.g.
+
+```shell
+lnav \
+  'kubectl://selector/key=value?namespace=namespace-one' \
+  'kubectl://selector/key=value?namespace=namespace-two'
 ```

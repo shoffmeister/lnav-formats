@@ -4,21 +4,33 @@
 #
 
 ;SELECT jget(url, '/scheme') AS kubectl_scheme,
-        jget(url, '/user') AS kubectl_user,
-        jget(url, '/password') AS kubectl_password,
         jget(url, '/host') AS kubectl_hostname,
-        jget(url, '/path') AS kubectl_path
+        jget(url, '/path') AS kubectl_path,
+        jget(url, '/parameters/n') AS kubectl_param_n,
+        jget(url, '/parameters/namespace') AS kubectl_param_namespace,
+        jget(url, '/parameters/max-log-requests') AS kubectl_param_max_log_requests
    FROM (SELECT parse_url($1) AS url)
 
-#
-# kubectl://select:42@app.kubernetes.io/managed-by=Helm
-# kubectl://pod-with-many-containers
-# kubectl://:42@pod-with-many-containers
-# kubectl://:42@pod-with-many-containers
-#
+;SELECT substr($kubectl_scheme, 1, length($kubectl_scheme)-length('-fancy') ) AS executable_program
 
-;SELECT $kubectl_hostname || $kubectl_path AS payload
+# exploit NULL behaviour to produce NULL results
+;SELECT '--namespace=' || coalesce($kubectl_param_n, $kubectl_param_namespace) AS namespace
+;SELECT '--max-log-requests=' || $kubectl_param_max_log_requests AS max_log_requests
 
-;SELECT printf(':sh %s logs --follow --all-containers=true --max-log-requests=42 "--selector=%s"', $scheme_stripped_of_select, $payload) AS cmds
+;SELECT ltrim($kubectl_path, '/') AS payload
+
+;SELECT CASE
+        $kubectl_hostname
+        WHEN 'resource' THEN (
+          -- printf(':sh bash -c "echo user:%s process:%s payload:%s namespace:%s max-log-requests:%s"', $kubectl_username, $executable_program, $payload, $namespace, $max_log_requests)
+          printf(':sh %s logs --follow --all-containers=true %s %s %s', $executable_program, $namespace, $max_log_requests, $payload)
+        )
+        WHEN 'selector' THEN (
+          -- printf(':sh bash -c "echo user:%s process:%s payload:%s namespace:%s max-log-requests:%s"', $kubectl_username, $executable_program, $payload, $namespace, $max_log_requests)
+          printf(':sh %s logs --follow --all-containers=true %s %s --selector=%s', $executable_program, $namespace, $max_log_requests, $payload)
+        )
+        ELSE
+          printf(':alt-msg "%s" not understood as a query strategy, ignoring')
+        END AS cmds
 
 :eval ${cmds}
