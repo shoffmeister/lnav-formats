@@ -1,0 +1,19 @@
+{
+    "$schema": "https://lnav.org/schemas/config-v1.schema.json",
+    "tuning": {
+        "url-scheme": {
+            "kubectl": {
+                "handler": "kubectl-url-handler"
+            },
+            "kubectl-select": {
+                "handler": "kubectl-select-url-handler"
+            },
+            "oc": {
+                "handler": "kubectl-url-handler"
+            },
+            "oc-select": {
+                "handler": "kubectl-select-url-handler"
+            }
+        }
+    }
+}

@@ -1,0 +1,13 @@
+#
+# @synopsis: kubectl-url-handler
+# @description: Internal script to handle opening kubectl/oc URLs
+#
+
+;SELECT jget(url, '/scheme') AS kubectl_scheme,
+        jget(url, '/host') AS kubectl_hostname,
+        jget(url, '/path') AS kubectl_path
+   FROM (SELECT parse_url($1) AS url)
+
+;SELECT printf(':sh %s logs --follow --all-containers=true %s', $kubectl_scheme, $kubectl_hostname) AS cmds
+
+:eval ${cmds}
