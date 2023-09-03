@@ -66,5 +66,5 @@ value for `--max-log-requests` - buyer beware.
 ```shell
 lnav kubectl-select://app.kubernetes.io/managed-by=Helm
 
-lnav 'oc-select://app.kubernetes.io/managed-by=Helm'
+lnav oc-select://app.kubernetes.io/managed-by=Helm
 ```
