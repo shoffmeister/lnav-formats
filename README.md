@@ -5,16 +5,9 @@ This repository contains a set of custom URL schemes accepted by <https://lnav.o
 Through the general functionality of `lnav`, this enables merging multiple `kubectl logs` or `oc logs` outputs, aggregating across
 a variety of selector- and resource-based log sources.
 
-> [!NOTE]
-> The content of this repository builds on top
-> of unreleased `lnav` features and is itself
-> still subject to experimentation and stabiliziation.
->
-> _Caveat emptor_.
-
 ## System requirements
 
-* an installation of `lnav` which supports custom URL schemes. lnav 0.11.2 does not contain this functionality, it was only present in CI builds at the time of this writing
+* an installation of `lnav` version 0.12.0 or later.
 * `kubectl` and/or `oc` binaries on the PATH
 
 The implementation does not contain any operating system-specific functionality. It will therefore work wherever `lnav`, `kubectl`, and `oc` are available.
